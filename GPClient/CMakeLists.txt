@@ -59,12 +59,9 @@ target_link_libraries(gpclient
     Qt6::WebEngineCore
     Qt6::WebEngineWidgets
     Qt6::DBus
+    Qt6::StateMachine
     ${QTKEYCHAIN_LIBRARIES}
 )
-
-if(TARGET Qt6::StateMachine)
-    target_link_libraries(gpclient Qt6::StateMachine)
-endif()
 
 if (CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 8.0 AND CMAKE_BUILD_TYPE STREQUAL Release)
     target_compile_options(gpclient PUBLIC "-ffile-prefix-map=${CMAKE_SOURCE_DIR}=.")
