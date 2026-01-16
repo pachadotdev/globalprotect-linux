@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/images">
+        <file alias="com.qt.gpclient.svg">com.qt.gpclient.svg</file>
+        <file alias="connected.svg">connected.svg</file>
+        <file alias="connecting.svg">connecting.svg</file>
+        <file alias="disconnected.svg">disconnected.svg</file>
+    </qresource>
+</RCC>

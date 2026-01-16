@@ -1,0 +1,13 @@
+[Desktop Entry]
+
+Type=Application
+Version=1.0
+Name=GlobalProtect VPN
+Comment=GlobalProtect VPN client for Linux based on OpenConnect, supports SAML authentication
+GenericName=GlobalProtect VPN client
+Categories=Network;Dialup;
+Exec=env QT_AUTO_SCREEN_SCALE_FACTOR=1 @CMAKE_INSTALL_PREFIX@/bin/gpclient
+Icon=/usr/share/icons/hicolor/scalable/apps/com.qt.gpclient.svg
+Keywords=GlobalProtect;Openconnect;SAML;connection;VPN;
+StartupWMClass=gpclient
+Terminal=false

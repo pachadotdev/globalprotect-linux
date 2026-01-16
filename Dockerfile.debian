@@ -1,0 +1,88 @@
+FROM ubuntu:24.04
+
+# Prevent interactive prompts during package installation
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install build dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    cmake \
+    qt6-base-dev \
+    qt6-webengine-dev \
+    qt6-webengine-dev-tools \
+    libqt6webenginecore6 \
+    libqt6websockets6-dev \
+    qtkeychain-qt6-dev \
+    openconnect \
+    debhelper \
+    devscripts \
+    dpkg-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /build
+
+# Copy source files
+COPY . .
+
+# Remove any existing build or debian directories
+RUN rm -rf build debian
+
+# Build the package
+RUN mkdir -p debian/source && \
+    echo "11" > debian/compat && \
+    echo "3.0 (native)" > debian/source/format
+
+# Create debian control file
+RUN echo "Source: globalprotect-openconnect" > debian/control && \
+    echo "Section: net" >> debian/control && \
+    echo "Priority: optional" >> debian/control && \
+    echo "Maintainer: Mauricio Vargas Sepulveda <m.vargas.sepulveda@gmail.com>" >> debian/control && \
+    echo "Build-Depends: debhelper (>= 11), cmake, qt6-base-dev, qt6-webengine-dev, libqt6websockets6-dev, qtkeychain-qt6-dev" >> debian/control && \
+    echo "Standards-Version: 4.1.3" >> debian/control && \
+    echo "Homepage: https://github.com/pachadotdev/globalprotect-linux" >> debian/control && \
+    echo "" >> debian/control && \
+    echo "Package: globalprotect-openconnect" >> debian/control && \
+    echo "Architecture: any" >> debian/control && \
+    echo "Depends: \${shlibs:Depends}, \${misc:Depends}, openconnect" >> debian/control && \
+    echo "Description: GlobalProtect VPN client for Linux" >> debian/control && \
+    echo " An unofficial GlobalProtect VPN client for Linux that uses openconnect." >> debian/control && \
+    echo " This package provides a Qt6-based GUI for connecting to GlobalProtect VPNs." >> debian/control
+
+# Create debian changelog
+RUN printf '%s\n' \
+    'globalprotect-openconnect (0.0.1-1) unstable; urgency=medium' \
+    '' \
+    '  * Initial release' \
+    '' \
+    ' -- Mauricio Vargas <m.vargas.sepulveda@gmail.com>  Thu, 16 Jan 2026 00:00:00 +0000' \
+    > debian/changelog
+
+# Create debian rules
+RUN echo '#!/usr/bin/make -f' > debian/rules && \
+    echo '' >> debian/rules && \
+    echo '%:' >> debian/rules && \
+    echo '\tdh $@ --buildsystem=cmake --builddirectory=obj-build' >> debian/rules && \
+    echo '' >> debian/rules && \
+    echo 'override_dh_auto_configure:' >> debian/rules && \
+    echo '\tdh_auto_configure --builddirectory=obj-build -- \\' >> debian/rules && \
+    echo '\t\t-DCMAKE_BUILD_TYPE=Release \\' >> debian/rules && \
+    echo '\t\t-DCMAKE_CXX_FLAGS_RELEASE=-s \\' >> debian/rules && \
+    echo '\t\t-DQT_DEFAULT_MAJOR_VERSION=6 \\' >> debian/rules && \
+    echo '\t\t-DCMAKE_INSTALL_PREFIX=/usr' >> debian/rules && \
+    echo '' >> debian/rules && \
+    echo 'override_dh_auto_build:' >> debian/rules && \
+    echo '\tdh_auto_build --builddirectory=obj-build -- -j$$(nproc)' >> debian/rules
+
+RUN chmod +x debian/rules
+
+# Create copyright file
+RUN echo "Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/" > debian/copyright && \
+    echo "Upstream-Name: globalprotect-openconnect" >> debian/copyright && \
+    echo "Source: https://github.com/pachadotdev/globalprotect-linux" >> debian/copyright && \
+    echo "" >> debian/copyright && \
+    echo "Files: *" >> debian/copyright && \
+    echo "Copyright: 2026 Mauricio Vargas" >> debian/copyright && \
+    echo "License: GPL-3+" >> debian/copyright
+
+# Build the package
+CMD ["sh", "-c", "dpkg-buildpackage -us -uc -b -d && cp ../*.deb /output/"]
