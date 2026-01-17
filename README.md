@@ -2,9 +2,9 @@
 
 ## About
 
-An unofficial GlobalProtect VPN client for Linux that uses openconnect, providing a Qt6-based GUI for connecting to GlobalProtect VPNs.
+An unofficial GlobalProtect VPN client for Linux that uses OpenConnect, providing a Qt6-based GUI for connecting to GlobalProtect VPNs.
 
-I was using [GlobalProtect-openconnect](https://github.com/yuezk/GlobalProtect-openconnect) until it stopped working with an upgrade made to my university's VPN server. This project is a ground-up alternative to the excellent work made by Yuezk with a different approach to the GUI.
+I was using [GlobalProtect-openconnect](https://github.com/yuezk/GlobalProtect-openconnect) until it stopped working after an upgrade made to my university's VPN server. This project is a ground-up alternative to the excellent work made by Yuezk with a different approach to the GUI.
 
 The software is organized into two main components:
 
@@ -34,12 +34,14 @@ Alternatively, building from source following [build.md](build.md) instructions.
 
 ### Ubuntu/Debian
 
-1. Download the `.deb` package from TODO: LINK
+1. Download the `.deb` package from https://github.com/pachadotdev/globalprotect-linux/releases/download/v0.0.1/globalprotect-openconnect_0.0.1_amd64.deb
 2. Install using gdebi:
 ```bash
 sudo apt install gdebi-core
 sudo gdebi globalprotect-openconnect_0.0.1_amd64.deb
 ```
+
+The installer was created using Docker and it will handle all dependencies including OpenConnect and parts of Qt6.
 
 ### Fedora/RedHat
 
