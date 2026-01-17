@@ -11,30 +11,13 @@ The software is organized into two main components:
 1. **gpservice**: A system service that manages the VPN connection using openconnect in the background.
 2. **gpclient**: A Qt6-based GUI application that interacts with gpservice to provide a user-friendly interface for connecting to GlobalProtect VPNs.
 
-Here is how the GUI looks like:
+Here is how the GUI looks like, I prefer to keep it simple and avoid unnecessary features:
 
 ![gpclient screenshot](gui.png)
 
-The GUI is minimalistic. I prefer to keep it simple and avoid unnecessary features.
+If this project helps you, please consider donating to support its development: [Buy Me A Coffee](https://buymeacoffee.com/pacha).
 
 ## Installation
-
-### Ubuntu/Debian
-
-1. Download the `.deb` package from TODO: LINK
-2. Install using gdebi:
-```bash
-sudo apt install gdebi-core
-sudo gdebi globalprotect-openconnect_0.0.1_amd64.deb
-```
-
-### Fedora/RedHat
-
-1. Download the `.rpm` package from TODO: LINK
-2. Install using dnf:
-```bash
-sudo dnf install globalprotect-openconnect-0.0.1-1.fc39.x86_64.rpm
-```
 
 ### Manjaro/Arch
 
@@ -48,6 +31,19 @@ makepkg -si
 ```
 
 Alternatively, building from source following [build.md](build.md) instructions.
+
+### Ubuntu/Debian
+
+1. Download the `.deb` package from TODO: LINK
+2. Install using gdebi:
+```bash
+sudo apt install gdebi-core
+sudo gdebi globalprotect-openconnect_0.0.1_amd64.deb
+```
+
+### Fedora/RedHat
+
+WIP
 
 ## Usage
 
@@ -65,28 +61,20 @@ gpclient
 
 ## Uninstallation
 
-### Ubuntu/Debian
-
-```bash
-sudo systemctl stop gpservice
-sudo systemctl disable gpservice
-sudo apt remove globalprotect-openconnect
-```
-
-### Fedora/RedHat
-
-```bash
-sudo systemctl stop gpservice
-sudo systemctl disable gpservice
-sudo dnf remove globalprotect-openconnect
-```
-
 ### Arch/Manjaro
 
 ```bash
 sudo systemctl stop gpservice
 sudo systemctl disable gpservice
 sudo pacman -R globalprotect-openconnect-git
+```
+
+### Ubuntu/Debian
+
+```bash
+sudo systemctl stop gpservice
+sudo systemctl disable gpservice
+sudo apt remove globalprotect-openconnect
 ```
 
 ## License

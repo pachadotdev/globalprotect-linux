@@ -101,7 +101,8 @@ RUN mkdir -p /build/deb/DEBIAN && \
 # Copy built files to package
 RUN cp -r /build/debian-pkg/usr /build/deb/
 
-# Build the DEB package
-RUN dpkg-deb --build /build/deb /output/globalprotect-openconnect_0.0.1_amd64.deb
+# Ensure output directory exists for packaging
+RUN mkdir -p /output && \
+    dpkg-deb --build /build/deb /output/globalprotect-openconnect_0.0.1_amd64.deb
 
 CMD ["cp", "/output/globalprotect-openconnect_0.0.1_amd64.deb", "/output/"]
