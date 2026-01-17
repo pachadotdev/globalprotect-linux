@@ -15,7 +15,7 @@
 
 using namespace QKeychain;
 
-QNetworkAccessManager* gpclient::helper::networkManager = new QNetworkAccessManager;
+QNetworkAccessManager* gpclient::helper::networkManager = nullptr;
 
 QNetworkReply* gpclient::helper::createRequest(QString url, QByteArray params)
 {
@@ -29,6 +29,11 @@ QNetworkReply* gpclient::helper::createRequest(QString url, QByteArray params)
 
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/x-www-form-urlencoded");
     request.setHeader(QNetworkRequest::UserAgentHeader, UA);
+
+    // Ensure network manager exists (lazy init after Q(Core)Application is constructed)
+    if (!networkManager) {
+        networkManager = new QNetworkAccessManager(qApp);
+    }
 
     if (params == nullptr) {
         return networkManager->post(request, QByteArray(nullptr));
@@ -109,27 +114,39 @@ void gpclient::helper::moveCenter(QWidget *widget)
     widget->move(x, y);
 }
 
-QSettings *gpclient::helper::settings::_settings = new QSettings("com.pacha.qt", "GPClient");
+QSettings *gpclient::helper::settings::_settings = nullptr;
 
 QVariant gpclient::helper::settings::get(const QString &key, const QVariant &defaultValue)
 {
+    if (!_settings) {
+        _settings = new QSettings("com.pacha.qt", "GPClient");
+    }
     return _settings->value(key, defaultValue);
 }
 
 QStringList gpclient::helper::settings::get_all(const QString &key, const QVariant &defaultValue)
 {
-	QRegularExpression re(key);
-	return 	_settings->allKeys().filter(re);
+    if (!_settings) {
+        _settings = new QSettings("com.pacha.qt", "GPClient");
+    }
+    QRegularExpression re(key);
+    return 	_settings->allKeys().filter(re);
 }
 
 void gpclient::helper::settings::save(const QString &key, const QVariant &value)
 {
+    if (!_settings) {
+        _settings = new QSettings("com.pacha.qt", "GPClient");
+    }
     _settings->setValue(key, value);
 }
 
 
 void gpclient::helper::settings::clear()
 {
+    if (!_settings) {
+        _settings = new QSettings("com.pacha.qt", "GPClient");
+    }
     QStringList keys = _settings->allKeys();
     for (const auto &key : std::as_const(keys)) {
         if (!reservedKeys.contains(key)) {
@@ -147,7 +164,9 @@ bool gpclient::helper::settings::secureSave(const QString &key, const QString &v
     job.setKey( key );
     job.setTextData( value );
     QEventLoop loop;
-    job.connect( &job, SIGNAL(finished(QKeychain::Job*)), &loop, SLOT(quit()) );
+    if (&job && &loop) {
+        QObject::connect(&job, &QKeychain::Job::finished, &loop, &QEventLoop::quit);
+    }
     job.start();
     loop.exec();
     if ( job.error() ) {
@@ -162,7 +181,9 @@ bool gpclient::helper::settings::secureGet(const QString &key, QString &value) {
     job.setAutoDelete( false );
     job.setKey( key );
     QEventLoop loop;
-    job.connect( &job, SIGNAL(finished(QKeychain::Job*)), &loop, SLOT(quit()) );
+    if (&job && &loop) {
+        QObject::connect(&job, &QKeychain::Job::finished, &loop, &QEventLoop::quit);
+    }
     job.start();
     loop.exec();
 

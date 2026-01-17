@@ -28,9 +28,8 @@ find_package(Qt6 REQUIRED COMPONENTS
     WebEngineCore
     WebEngineWidgets
     DBus
+    StateMachine
 )
-
-find_package(Qt6 COMPONENTS StateMachine)
 
 find_package(Qt6Keychain REQUIRED)
 

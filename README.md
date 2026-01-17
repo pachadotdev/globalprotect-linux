@@ -1,6 +1,21 @@
 # Global Protect Unofficial Software for Linux
 
+## About
+
 An unofficial GlobalProtect VPN client for Linux that uses openconnect, providing a Qt6-based GUI for connecting to GlobalProtect VPNs.
+
+I was using [GlobalProtect-openconnect](https://github.com/yuezk/GlobalProtect-openconnect) until it stopped working with an upgrade made to my university's VPN server. This project is a ground-up alternative to the excellent work made by Yuezk with a different approach to the GUI.
+
+The software is organized into two main components:
+
+1. **gpservice**: A system service that manages the VPN connection using openconnect in the background.
+2. **gpclient**: A Qt6-based GUI application that interacts with gpservice to provide a user-friendly interface for connecting to GlobalProtect VPNs.
+
+Here is how the GUI looks like:
+
+![gpclient screenshot](gui.png)
+
+The GUI is minimalistic. I prefer to keep it simple and avoid unnecessary features.
 
 ## Installation
 
